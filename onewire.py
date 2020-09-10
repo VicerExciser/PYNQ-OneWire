@@ -16,9 +16,11 @@ import core.const as const
 import core.temputil as util
 import core.userinterface as ui
 
+from pynq.base.overlays import BaseOverlay
+
 OVERLAY_NAME = 'vip.bit' 	## Put this bitstream file in the directory:  /home/xilinx/pynq/overlays/vip/
 OVERLAY_PATH = os.path.join(os.environ['HOME'], 'pynq', 'overlays', 'vip', OVERLAY_NAME)
-BASE = BaseOverlay(OVERLAY_PATH)
+OL = BaseOverlay(OVERLAY_PATH)
 
 	
 
@@ -28,9 +30,12 @@ class OneWire(object):
 	Class representing a programmatic device driver for issuing ROM commands to
 	multiple DS18B20 temperature sensors on a 1-Wire protocol bus.
 	'''
+	AXI_OW_IP_NAME = 'ow_master_top_0'
 
-	AXI_OW_ADDR = 0x83C20000	# vip.bit OneWire module offset (memory mapped address in the fabric)
-	AXI_OW_RANGE = 0xFFFF
+	# AXI_OW_ADDR = 0x83C20000	# vip.bit OneWire module offset (memory mapped address in the fabric)
+	AXI_OW_ADDR = OL.ip_dict[AXI_OW_IP_NAME]['phys_addr']  	   ## 0x83c20000
+	# AXI_OW_RANGE = 0xFFFF
+	AXI_OW_RANGE = OL.ip_dict[AXI_OW_IP_NAME]['addr_range']    ## 0x10000
 
 	TRANSMIT_BITS = 0x40  # 64-bits to transmit over the bus
 	SCRATCH_RD_SIZE = 0x48  # read in 72 bits from scratch reg
