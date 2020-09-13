@@ -2,7 +2,7 @@ import os
 import time
 from pynq import MMIO, Clocks
 from pynq.pl import PL
-from pynq.base.overlays import BaseOverlay
+from pynq.overlays.base import BaseOverlay
 import ds18b20
 
 ###################################################################################################
