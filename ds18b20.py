@@ -3,8 +3,8 @@ import re
 ###################################################################################################
 
 FAMILY_CODE = 0x28
-T_CONV = 0.750  		## Temp conversion time, default value
-T_RW = 0.010  			## EEPROM write time, default value
+CONV_TIME = 0.750  		## Temp conversion time, default value
+RW_TIME = 0.010  			## EEPROM write time, default value
 TRANSMIT_BITS = 0x40  	## 64-bits to transmit over the bus
 SCRATCH_RD_SIZE = 0x48  ## read in 72 bits from scratch reg
 
