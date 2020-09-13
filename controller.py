@@ -11,7 +11,7 @@ class TemperatureController():
 		self.ow_bus = OneWire.get_instance()
 		self.sensor_class = sensor_type
 		self.sensors = []
-		for sensor in ow_bus.search(self.sensor_class, ds18b20.rom_cmds['SRCH_ROM']):
+		for sensor in self.ow_bus.search(self.sensor_class, ds18b20.rom_cmds['SRCH_ROM']):
 			self.sensors.append(sensor)
 			print(f"[{self.__class__.__name__}]\tFound {self.sensor_class.__name__}:  {repr(sensor)}")
 
