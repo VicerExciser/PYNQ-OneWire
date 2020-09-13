@@ -122,10 +122,10 @@ class OneWire():
 		""" Virtually private constructor for singleton OneWire class. """
 		if OneWire.__instance is None:
 			OneWire.BRAM = MMIO(base_addr, addr_range)
-			if base_addr != AXI_OW_ADDR:
-				AXI_OW_ADDR = base_addr
-			if addr_range != AXI_OW_RANGE:
-				AXI_OW_RANGE = addr_range
+			# if base_addr != AXI_OW_ADDR:
+			AXI_OW_ADDR = base_addr
+			# if addr_range != AXI_OW_RANGE:
+			AXI_OW_RANGE = addr_range
 			
 			OneWire.__instance = self 
 			OneWire.search_complete = True 
@@ -164,7 +164,8 @@ class OneWire():
 		print(f"[set_clk]  Clocks.fclk{idx}_mhz = {cur_freq}MHz")
 		if abs(cur_freq - mhz) > 1: 		## Tests approximate equality to prevent call redundancy 
 			print(f"[set_clk]  Setting fclk{idx} to {mhz}MHz")
-			Clocks.set_fclk(clk_idx=idx, clk_mhz=mhz)
+			# Clocks.set_fclk(clk_idx=idx, clk_mhz=mhz)
+			Clocks.set_pl_clk(idx, clk_mhz=mhz)
 
 
 	@staticmethod
