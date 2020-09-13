@@ -134,7 +134,7 @@ class OneWire():
 			OneWire.set_clk()		## Set the PL function clock tied to the ow_master IP to 33 MHz
 
 			OneWire.__bus_initialized = True 
-			print(f"New '{self.__class__.__name__}'' singleton instance has been instantiated.")
+			print(f"New '{self.__class__.__name__}' singleton instance has been instantiated.")
 
 
 	@property
@@ -301,6 +301,7 @@ class OneWire():
 		new_size = num_found * 2
 		if new_size > OneWire.ROMAD_SIZE:
 			OneWire.ROMAD_SIZE = new_size
+			OneWire.rom_addrs = [0] * new_size
 		print(f'# ROMS FOUND = {num_found}')
 
 		index = 0
@@ -308,8 +309,8 @@ class OneWire():
 			rom_lo = OneWire.bram_read((addr_map['RM0_ADDR'] + (index << 3)))
 			rom_hi = OneWire.bram_read((addr_map['RM1_ADDR'] + (index << 3)))
 			rom_long = (rom_hi << 32) + rom_lo
-			rom_array[index * 2] = rom_lo
-			rom_array[(index * 2) + 1] = rom_hi
+			OneWire.rom_addrs[index * 2] = rom_lo
+			OneWire.rom_addrs[(index * 2) + 1] = rom_hi
 			print(f"ROM {index} ID: {hex(rom_long)}")
 
 			new_sensor = SensorClass(rom_hi, rom_lo, onewire_index=index)
