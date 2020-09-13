@@ -3,7 +3,7 @@ import re
 ###################################################################################################
 
 FAMILY_CODE = 0x28
-CONV_TIME = 0.750  		## Temp conversion time, default value
+T_CONV_TIME = 0.750  		## Temp conversion time, default value
 RW_TIME = 0.010  			## EEPROM write time, default value
 TRANSMIT_BITS = 0x40  	## 64-bits to transmit over the bus
 SCRATCH_RD_SIZE = 0x48  ## read in 72 bits from scratch reg
@@ -119,7 +119,7 @@ class DS18B20(object):
 		self.alarm_hi = self.__target_temp + self.__temp_flux
 
 	def __str__(self):
-		return self.details_string
+		return self.details_string()
 
 	def __repr__(self):
 		return self.serial_string

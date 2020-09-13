@@ -17,7 +17,7 @@ class TemperatureController():
 		self.func_cmds = sys.modules[self.sensor_class.__module__].func_cmds 
 
 		self.family_code = sys.modules[self.sensor_class.__module__].FAMILY_CODE
-		self.temp_convert_time = sys.modules[self.sensor_class.__module__].CONV_TIME 
+		self.temp_convert_time = sys.modules[self.sensor_class.__module__].T_CONV_TIME 
 		self.rw_time = sys.modules[self.sensor_class.__module__].RW_TIME 
 		self.transmit_bits = sys.modules[self.sensor_class.__module__].TRANSMIT_BITS
 		self.scratch_rd_size = sys.modules[self.sensor_class.__module__].SCRATCH_RD_SIZE
