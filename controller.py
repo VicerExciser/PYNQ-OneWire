@@ -16,7 +16,7 @@ class TemperatureController():
 			print(f"[{self.__class__.__name__}]\tFound {self.sensor_class.__name__}:  {repr(sensor)}")
 
 
-	def poll_temperatures(delay=1):
+	def poll_temperatures(self, delay=1):
 		for sensor in self.sensors:
 			temp_c, temp_f = self.get_temperature(sensor)
 			print(str(sensor))
