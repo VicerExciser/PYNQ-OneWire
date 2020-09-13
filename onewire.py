@@ -301,7 +301,7 @@ class OneWire():
 		new_size = num_found * 2
 		if new_size > OneWire.ROMAD_SIZE:
 			OneWire.ROMAD_SIZE = new_size
-			OneWire.rom_addrs = [0] * new_size
+		OneWire.rom_addrs = [0] * OneWire.ROMAD_SIZE 
 		print(f'# ROMS FOUND = {num_found}')
 
 		index = 0
