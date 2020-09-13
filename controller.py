@@ -56,7 +56,7 @@ class TemperatureController():
 			print('AN ERROR OCCURRED DURING get_temperature CALL')
 			return 0
 		"""
-		if hasattr(sensor, rom_index):
+		if hasattr(sensor, 'rom_index'):
 			ichoice = sensor.rom_index  ## Index of the device on the OneWire bus
 		else:
 			ichoice = sensor.serial_string
