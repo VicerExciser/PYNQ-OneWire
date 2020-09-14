@@ -24,8 +24,13 @@ class TemperatureController():
 
 		for sensor in self.ow_bus.search(self.sensor_class, self.rom_cmds['SRCH_ROM']):
 			self.sensors.append(sensor)
-			print(f"[{self.__class__.__name__}]\tFound {self.sensor_class.__name__}:  {repr(sensor)}")
+			print(f"\n[{self.__class__.__name__}]\tFound {self.sensor_class.__name__}:  {repr(sensor)}")
 
+
+		if self.ow_bus.num_roms == 0:
+		#if OneWire.num_roms == 0:
+			print(f"\n[{self.__class__.__name__}]\tERROR: No sensors found on the OneWire bus!\n ~ A B O R T I N G ~ \n")
+			sys.exit(0)
 
 	def poll_temperatures(self, delay=1):
 		for sensor in self.sensors:
