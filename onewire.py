@@ -10,7 +10,8 @@ import ds18b20
 OVERLAY_NAME = 'vip.bit' 	## Put this bitstream file in the directory:  /home/xilinx/pynq/overlays/vip/
 OVERLAY_DIR = OVERLAY_NAME.replace('.bit', '')
 OVERLAY_PATH = os.path.join('/', 'home', 'xilinx', 'pynq', 'overlays', OVERLAY_DIR, OVERLAY_NAME)
-OL = BaseOverlay(OVERLAY_PATH, download=(not OVERLAY_NAME == PL.bitfile_name.split('/')[-1]))
+OL = BaseOverlay(OVERLAY_PATH)   #, download=(not OVERLAY_NAME == PL.bitfile_name.split('/')[-1]))
+## ^ Skipping the re-download will break 1-Wire search
 
 AXI_OW_IP_NAME = 'ow_master_top_0'
 AXI_OW_ADDR = OL.ip_dict[AXI_OW_IP_NAME]['phys_addr']  	   ## 0x83c20000
@@ -134,7 +135,7 @@ class OneWire():
 			OneWire.set_clk()		## Set the PL function clock tied to the ow_master IP to 33 MHz
 
 			OneWire.__bus_initialized = True 
-			print(f"New '{self.__class__.__name__}' singleton instance has been instantiated.")
+			print(f"\n[__init__]  New '{self.__class__.__name__}' singleton instance has been instantiated.\n")
 
 
 	@property
@@ -204,36 +205,10 @@ class OneWire():
 			timeout()
 		return True
 
-	'''
-	@staticmethod
-	def match_rom(ichoice):
-		"""
-		MATCH ROM [55h]
-		The match ROM command allows to address a specific slave device on a multidrop or single-drop bus.
-		Only the slave that exactly matches the 64-bit ROM code sequence will respond to the function command
-		issued by the master; all other slaves on the bus will wait for a reset pulse.
-		"""
-		OneWire.bram_write(addr_map['CMD_ADDR'], ds18b20.rom_cmds['MTCH_ROM'])
-		OneWire.bram_write(addr_map['WRS_ADDR'], ds18b20.TRANSMIT_BITS)
-		OneWire.bram_write(addr_map['WR0_ADDR'], OneWire.rom_addrs[ichoice * 2])
-		OneWire.bram_write(addr_map['WR1_ADDR'], OneWire.rom_addrs[(ichoice * 2) + 1])
-		OneWire.bram_write(addr_map['CON_ADDR'], bus_cmds['EXEC_WO_PULLUP'])
-		r_status = OneWire.bram_read(addr_map['STA_ADDR'])
-		x = r_status & masks['STA_WRD']
-		count = 0
-		while x == 0:
-			r_status = OneWire.bram_read(addr_map['STA_ADDR'])
-			x = r_status & masks['STA_WRD']
-			count += 1
-			if (count > 20):
-				print('Desired ROM address not matched')
-				return False
-			timeout()
-		return True
-	'''
-	
+
+	@static
 	def get_rom_id(sensor_index):
-		if 0 <= sensor_index < OneWire.ROMAD_SIZE:  #len(OneWire.rom_addrs):
+		if 0 <= sensor_index < (len(OneWire.rom_addrs) // 2):  #OneWire.ROMAD_SIZE:
 			true_idx = sensor_index * 2
 			rom_lo = OneWire.rom_addrs[true_idx]
 			rom_hi = OneWire.rom_addrs[true_idx + 1]
@@ -241,6 +216,8 @@ class OneWire():
 			return hex(rom_id).split('x')[-1].upper()
 			# return OneWire.rom_addrs[sensor_index]
 		return None
+
+	def get_
 	
 	
 ## ---------------------------------------------------------------------------------------------

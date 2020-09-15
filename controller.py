@@ -11,16 +11,17 @@ class TemperatureController():
 	def __init__(self, sensor_type=ds18b20.DS18B20):
 		self.ow_bus = OneWire.get_instance()
 		self.sensor_class = sensor_type
+		self.sensor_module = self.sensor_class.__module__
 		self.sensors = []
 
-		self.rom_cmds = sys.modules[self.sensor_class.__module__].rom_cmds 
-		self.func_cmds = sys.modules[self.sensor_class.__module__].func_cmds 
+		self.rom_cmds = sys.modules[self.sensor_module].rom_cmds 
+		self.func_cmds = sys.modules[self.sensor_module].func_cmds 
 
-		self.family_code = sys.modules[self.sensor_class.__module__].FAMILY_CODE
-		self.temp_convert_time = sys.modules[self.sensor_class.__module__].T_CONV_TIME 
-		self.rw_time = sys.modules[self.sensor_class.__module__].RW_TIME 
-		self.transmit_bits = sys.modules[self.sensor_class.__module__].TRANSMIT_BITS
-		self.scratch_rd_size = sys.modules[self.sensor_class.__module__].SCRATCH_RD_SIZE
+		self.family_code = sys.modules[self.sensor_module].FAMILY_CODE
+		self.temp_convert_time = sys.modules[self.sensor_module].T_CONV_TIME 
+		self.rw_time = sys.modules[self.sensor_module].RW_TIME 
+		self.transmit_bits = sys.modules[self.sensor_module].TRANSMIT_BITS
+		self.scratch_rd_size = sys.modules[self.sensor_module].SCRATCH_RD_SIZE
 
 		for sensor in self.ow_bus.search(self.sensor_class, self.rom_cmds['SRCH_ROM']):
 			self.sensors.append(sensor)

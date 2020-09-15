@@ -38,12 +38,6 @@ DEG_C = f'{DEG}C'
 DEG_F = f'{DEG}F'
 PLUSMINUS = '±'
 
-# following unicode must be used as:   print(u'{0}'.format(UNI_DEGR))
-UNI_DEGR = u'\u00B0'	# °
-UNI_DEGR_C = u'\u2103'	# ℃  
-UNI_DEGR_F = u'\u2109' 	# ℉
-
-
 ###################################################################################################
 
 def celsius_from_raw(temp_raw):
