@@ -206,7 +206,7 @@ class OneWire():
 		return True
 
 
-	@static
+	@staticmethod
 	def get_rom_id(sensor_index):
 		if 0 <= sensor_index < (len(OneWire.rom_addrs) // 2):  #OneWire.ROMAD_SIZE:
 			true_idx = sensor_index * 2
@@ -217,7 +217,7 @@ class OneWire():
 			# return OneWire.rom_addrs[sensor_index]
 		return None
 
-	def get_
+	# def get_
 	
 	
 ## ---------------------------------------------------------------------------------------------
