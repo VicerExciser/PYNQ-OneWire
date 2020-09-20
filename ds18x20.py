@@ -9,7 +9,7 @@ except (ImportError, ModuleNotFoundError):
 	import_path = os.path.join(os.getcwd(), 'onewire')
 	print(f"[{__file__}] Appending '{import_path}' to sys.path")
 	sys.path.append(import_path)
-	
+
 	from onewire.device import OneWireDevice
 	import onewire.constants as const
 
@@ -92,7 +92,7 @@ class DS18X20:
 		if self._last_read_temp is None or (time.monotonic() - self._last_read_time) >= TEMP_REFRESH_TIMEOUT:
 			assert(self._convert_temp())
 			self._last_read_temp = self._read_temp()
-			self._last_read_time = time.monotonic()
+			# self._last_read_time = time.monotonic()
 		return self._last_read_temp
 	
 	@property
@@ -102,30 +102,32 @@ class DS18X20:
 
 
 	@property
-    def resolution(self):
-        """The programmable resolution. 9, 10, 11, or 12 bits."""
-		return self._resolution
+	def resolution(self):
+		"""The programmable resolution. 9, 10, 11, or 12 bits."""
 		
 		## TODO: Implement capability for reading sensor resolution from EEPROM during runtime
 		"""
-        self._resolution = RESOLUTION_VALUES[self._read_scratch()[4] >> 5 & 0x03]
+		self._resolution = RESOLUTION_VALUES[self._read_scratch()[4] >> 5 & 0x03]
 		"""
+
+		return self._resolution
 		
 		
 
-    @resolution.setter
-    def resolution(self, bits):
-        if bits not in RESOLUTION_VALUES:
-            raise ValueError("Incorrect resolution. Must be 9, 10, 11, or 12.")
-		self._resolution = bits 
-
+	@resolution.setter
+	def resolution(self, bits):
+		if bits not in RESOLUTION_VALUES:
+			raise ValueError("Incorrect resolution. Must be 9, 10, 11, or 12.")
+		
 		## TODO: Implement capability for setting/changing sensor resolution during runtime
 		"""
-        self._buf[0] = 0  # TH register
-        self._buf[1] = 0  # TL register
-        self._buf[2] = RESOLUTION_VALUES.index(bits) << 5 | 0x1F  # configuration register
-        self._write_scratch(self._buf)
+		self._buf[0] = 0  # TH register
+		self._buf[1] = 0  # TL register
+		self._buf[2] = RESOLUTION_VALUES.index(bits) << 5 | 0x1F  # configuration register
+		self._write_scratch(self._buf)
 		"""
+
+		self._resolution = bits 
 
 
 	@property
@@ -150,18 +152,18 @@ class DS18X20:
 
 	def _read_temp(self):
 		"""
-        buf = self._read_scratch()
-        if self._address.family_code == 0x10:
-            if buf[1]:
-                t = buf[0] >> 1 | 0x80
-                t = -((~t + 1) & 0xFF)
-            else:
-                t = buf[0] >> 1
-            return t - 0.25 + (buf[7] - buf[6]) / buf[7]
-        t = buf[1] << 8 | buf[0]
-        if t & 0x8000:  # sign bit set
-            t = -((t ^ 0xFFFF) + 1)
-        return t / 16
+		buf = self._read_scratch()
+		if self._address.family_code == 0x10:
+			if buf[1]:
+				t = buf[0] >> 1 | 0x80
+				t = -((~t + 1) & 0xFF)
+			else:
+				t = buf[0] >> 1
+			return t - 0.25 + (buf[7] - buf[6]) / buf[7]
+		t = buf[1] << 8 | buf[0]
+		if t & 0x8000:  # sign bit set
+			t = -((t ^ 0xFFFF) + 1)
+		return t / 16
 		"""
 
 		assert(self._read_scratch())
@@ -171,6 +173,7 @@ class DS18X20:
 		raw_temp = (t_hi << 32) + t_lo 
 		"""
 		temp_raw = self._device.read(const.bram_registers['RD_DATA0'])
+		self._last_read_time = time.monotonic()
 		return celsius_from_raw(temp_raw) 
 
 
@@ -202,7 +205,7 @@ class DS18X20:
 
 
 	def read_temperature(self):
-        """Read the temperature. No polling of the conversion busy bit
-        (assumes that the conversion has completed)."""
-        return self._read_temp()
+		"""Read the temperature. No polling of the conversion busy bit
+		(assumes that the conversion has completed)."""
+		return self._read_temp()
 
