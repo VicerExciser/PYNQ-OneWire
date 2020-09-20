@@ -101,8 +101,8 @@ class OneWireBus:
 
 		if OneWireBus.__instance is None:
 			# OneWire(base_addr=kwargs['base_addr'], addr_range=kwargs['addr_range'])
-			OneWireBus(base_addr=base_addr, addr_range=addr_range)			
-		return OneWire.__instance
+			OneWireBus(base_addr=base_address, addr_range=address_range)			
+		return OneWireBus.__instance
 
 
 	def __init__(self, base_addr=const._DEFAULT_AXI_OW_ADDR, addr_range=const._DEFAULT_AXI_OW_RANGE):

@@ -76,8 +76,10 @@ class DS18X20:
 
 	def __init__(self, bus, address, resolution=12, target=29.999, flux=1.5):
 		# assert(isinstance(bus, onewire.bus.OneWireBus) and isinstance(address, onewire.bus.OneWireAddress))
-		if not (address.family_code == DS18B20_FAMILY_CODE or address.family_code == DS18S20_FAMILY_CODE):
-			raise ValueError("Incorrect family code in device address; only DS18B20 & DS18S20 supported.")
+		
+		#if not (address.family_code == DS18B20_FAMILY_CODE or address.family_code == DS18S20_FAMILY_CODE):
+		#	raise ValueError("Incorrect family code in device address; only DS18B20 & DS18S20 supported.")
+		
 		self._address = address
 		self._device = OneWireDevice(bus, address)
 		self._resolution = resolution if resolution in RESOLUTION_VALUES else 12
@@ -87,6 +89,10 @@ class DS18X20:
 		self._last_read_temp = None
 		self._last_read_time = time.monotonic() - TEMP_REFRESH_TIMEOUT
 
+
+	@property
+	def rom_id(self):
+		return self._address.rom
 
 	@property
 	def temperature(self):
@@ -145,7 +151,7 @@ class DS18X20:
 		This command initiates a single temperature conversion.
 		"""
 		with self._device as dev: 		## Automatically invokes `OneWireBus.reset()` and `OneWireBus.match_rom(self._address)`
-			dev.write_command(self.eeprom_commands['CONVT_TEMP'])
+			dev.write_command(eeprom_commands['CONVT_TEMP'])
 			dev.write_control(const.bus_commands['EXEC_W_PULLUP'])
 			time.sleep(self.conversion_delay)
 			return dev.status == const.bitmasks['STA_CMD']   #0x8
@@ -187,7 +193,7 @@ class DS18X20:
 		Note: master must generate read time slots immediately after issuing the command.
 		"""
 		with self._device as dev: 		## Automatically invokes `OneWireBus.reset()` and `OneWireBus.match_rom(self._address)`
-			dev.write_command(self.eeprom_commands['SCRATCH_RD'])
+			dev.write_command(eeprom_commands['SCRATCH_RD'])
 			dev.write(const.bram_registers['RD_SIZE'], SCRATCH_RD_SIZE)
 			dev.write_control(const.bus_commands['RD_TIME_SLOTS'])
 			count = 0

@@ -37,7 +37,7 @@ sensors = [DS18X20(ow_bus, address) for address in ow_bus.search()]
 while True:
 	try:
 		for index, sensor in enumerate(sensors):
-			print("Temperature: {0:0.3f}C".format(ds18.temperature))
+			#print("Temperature: {0:0.3f}C".format(ds18.temperature))
 			print(f"[{index}]  DS18X20_{hex(sensor.rom_id)}:\tTemperature = {sensor.temperature} °C")
 			time.sleep(0.1)
 		print('\n')
