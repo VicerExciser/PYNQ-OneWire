@@ -4,8 +4,25 @@
 ## NOTE:  A 4.7Kohm pullup between DATA and POWER is REQUIRED!
 
 import time
-from onewire.bus import OneWireBus
-from ds18x20 import DS18X20
+
+try:
+    from onewire.bus import OneWireBus
+    from ds18x20 import DS18X20
+
+except (ImportError, ModuleNotFoundError):
+    import os, sys
+    rootpath = '/'.join(os.getcwd().split('/')[:-1])
+    if not rootpath in sys.path:
+        print(f"[{__file__}] Appending '{rootpath}' to sys.path")
+        sys.path.append(rootpath)
+	
+    import_path = os.path.join(rootpath, 'onewire')
+    if not import_path in sys.path:
+        print(f"[{__file__}] Appending '{import_path}' to sys.path")
+        sys.path.append(import_path)
+
+    from onewire.bus import OneWireBus
+    from ds18x20 import DS18X20
 
 
 ## Initialize 1-Wire bus

@@ -4,7 +4,7 @@ from pynq import MMIO, Clocks
 # from pynq.pl import PL
 from pynq.overlays.base import BaseOverlay
 # import ds18b20
-import constants as const
+import .constants as const
 
 
 ###################################################################################################
@@ -25,13 +25,13 @@ class OneWireError(Exception):
 class OneWireAddress:
 	"""A class to represent a 1-Wire address."""
 
-    def __init__(self, rom):
-        self._rom = rom
+	def __init__(self, rom):
+    	self._rom = rom
 
-    @property
-    def rom(self):
-        """The unique 64 bit ROM code."""
-        return self._rom
+	@property
+	def rom(self):
+		"""The unique 64 bit ROM code."""
+		return self._rom
 
 	@property
 	def rom_hi(self):
@@ -41,20 +41,20 @@ class OneWireAddress:
 	def rom_lo(self):
 		return self._rom & 0xFFFFFFFF
 
-    @property
-    def crc(self):
-        """The 8 bit CRC."""
-        return self._rom[7]
+	@property
+	def crc(self):
+		"""The 8 bit CRC."""
+		return self._rom[7]
 
-    @property
-    def serial_number(self):
-        """The 48 bit serial number."""
-        return self._rom[1:7]
+	@property
+	def serial_number(self):
+		"""The 48 bit serial number."""
+		return self._rom[1:7]
 
-    @property
-    def family_code(self):
-        """The 8 bit family code."""
-        return self._rom[0]
+	@property
+	def family_code(self):
+		"""The 8 bit family code."""
+		return self._rom[0]
 
 	def __str__(self):
 		return f"OneWireAddress_{hex(self.rom)}"

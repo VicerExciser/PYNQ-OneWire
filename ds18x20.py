@@ -1,12 +1,15 @@
 import time
+
 try:
 	from onewire.device import OneWireDevice
 	import onewire.constants as const
+
 except (ImportError, ModuleNotFoundError):
 	import os, sys
 	import_path = os.path.join(os.getcwd(), 'onewire')
 	print(f"[{__file__}] Appending '{import_path}' to sys.path")
 	sys.path.append(import_path)
+	
 	from onewire.device import OneWireDevice
 	import onewire.constants as const
 
