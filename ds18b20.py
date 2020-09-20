@@ -29,9 +29,9 @@ func_cmds = {
 ###################################################################################################
 
 MIN_TEMP_TARG_C = 0.00
-MIN_TEMP_TARG_F = 32.00
+MIN_TEMP_TARG_F = fahr_from_celsius(MIN_TEMP_TARG_C)  #32.00
 MAX_TEMP_TARG_C = 105.00
-MAX_TEMP_TARG_F = 221.00 
+MAX_TEMP_TARG_F = fahr_from_celsius(MAX_TEMP_TARG_C)  #221.00 
 
 DEG = '°'
 DEG_C = f'{DEG}C'
