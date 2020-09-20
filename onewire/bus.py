@@ -4,7 +4,7 @@ from pynq import MMIO, Clocks
 # from pynq.pl import PL
 from pynq.overlays.base import BaseOverlay
 # import ds18b20
-import .constants as const
+from . import constants as const
 
 
 ###################################################################################################
@@ -26,7 +26,7 @@ class OneWireAddress:
 	"""A class to represent a 1-Wire address."""
 
 	def __init__(self, rom):
-    	self._rom = rom
+		self._rom = rom
 
 	@property
 	def rom(self):

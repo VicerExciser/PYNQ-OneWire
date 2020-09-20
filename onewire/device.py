@@ -1,13 +1,13 @@
 try:
 	from .bus import OneWireBus, OneWireAddress
-	import .constants as const
+	from . import constants as const
 except (ImportError, ModuleNotFoundError):
 	import os, sys
 	rootpath = '/'.join(os.getcwd().split('/'))  #[:-1])
 	print(f"[{__file__}] Appending '{rootpath}' to sys.path")
 	sys.path.append(rootpath)
 	from .bus import OneWireBus, OneWireAddress
-	import .constants as const
+	from . import constants as const
 
 
 class OneWireDevice:
