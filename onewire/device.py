@@ -11,7 +11,7 @@ except (ImportError, ModuleNotFoundError):
 
 
 class OneWireDevice:
-    """A class to represent a single device on the 1-Wire bus."""
+	"""A class to represent a single device on the 1-Wire bus."""
 
 	def __init__(self, bus, address):
 		assert(isinstance(bus, OneWireBus))

@@ -44,16 +44,6 @@ CONVERSION_DELAY_MAP = {
 CONVERSION_TIMEOUT = 2
 TEMP_REFRESH_TIMEOUT = 5
 
-MIN_TEMP_TARG_C = 0.00
-MIN_TEMP_TARG_F = fahr_from_celsius(MIN_TEMP_TARG_C)  #32.00
-MAX_TEMP_TARG_C = 105.00
-MAX_TEMP_TARG_F = fahr_from_celsius(MAX_TEMP_TARG_C)  #221.00 
-
-DEG = '°'
-DEG_C = f'{DEG}C'
-DEG_F = f'{DEG}F'
-PLUSMINUS = '±'
-
 ###################################################################################################
 
 def celsius_from_raw(temp_raw):
@@ -67,6 +57,18 @@ def fahr_from_raw(temp_raw):
 
 def fahr_from_celsius(temp_c):
 	return round((((9.0 / 5.0) * temp_c) + 32.0), 3)
+
+###################################################################################################
+
+MIN_TEMP_TARG_C = 0.00
+MIN_TEMP_TARG_F = fahr_from_celsius(MIN_TEMP_TARG_C)  #32.00
+MAX_TEMP_TARG_C = 105.00
+MAX_TEMP_TARG_F = fahr_from_celsius(MAX_TEMP_TARG_C)  #221.00 
+
+DEG = '°'
+DEG_C = f'{DEG}C'
+DEG_F = f'{DEG}F'
+PLUSMINUS = '±'
 
 ###################################################################################################
 

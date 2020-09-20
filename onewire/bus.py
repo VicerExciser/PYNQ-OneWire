@@ -101,13 +101,13 @@ class OneWireBus:
 
 		if OneWireBus.__instance is None:
 			# OneWire(base_addr=kwargs['base_addr'], addr_range=kwargs['addr_range'])
-			OneWire(base_addr=base_addr, addr_range=addr_range)			
+			OneWireBus(base_addr=base_addr, addr_range=addr_range)			
 		return OneWire.__instance
 
 
 	def __init__(self, base_addr=const._DEFAULT_AXI_OW_ADDR, addr_range=const._DEFAULT_AXI_OW_RANGE):
 		""" Virtually private constructor for singleton OneWire class. """
-		if OneWire.__instance is None:
+		if OneWireBus.__instance is None:
 			self.axi_addr = base_addr
 			self.axi_range = addr_range 
 			self.bram = MMIO(base_addr, addr_range)

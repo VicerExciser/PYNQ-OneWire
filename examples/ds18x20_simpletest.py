@@ -12,7 +12,7 @@ try:
 except (ImportError, ModuleNotFoundError):
 	import os, sys
 	cwd_split = os.getcwd().split('/')
-	rootpath = '/'.join(cwd_split[:-1] if cwd_split[-1] == 'examples' else cwd_split))
+	rootpath = '/'.join(cwd_split[:-1]) if cwd_split[-1] == 'examples' else os.getcwd()
 	if not rootpath in sys.path:
 		print(f"[{__file__}] Appending '{rootpath}' to sys.path")
 		sys.path.append(rootpath)
