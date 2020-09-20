@@ -6,23 +6,24 @@
 import time
 
 try:
-    from onewire.bus import OneWireBus
-    from ds18x20 import DS18X20
+	from onewire.bus import OneWireBus
+	from ds18x20 import DS18X20
 
 except (ImportError, ModuleNotFoundError):
-    import os, sys
-    rootpath = '/'.join(os.getcwd().split('/')[:-1])
-    if not rootpath in sys.path:
-        print(f"[{__file__}] Appending '{rootpath}' to sys.path")
-        sys.path.append(rootpath)
+	import os, sys
+	cwd_split = os.getcwd().split('/')
+	rootpath = '/'.join(cwd_split[:-1] if cwd_split[-1] == 'examples' else cwd_split))
+	if not rootpath in sys.path:
+		print(f"[{__file__}] Appending '{rootpath}' to sys.path")
+		sys.path.append(rootpath)
 	
-    import_path = os.path.join(rootpath, 'onewire')
-    if not import_path in sys.path:
-        print(f"[{__file__}] Appending '{import_path}' to sys.path")
-        sys.path.append(import_path)
+	import_path = os.path.join(rootpath, 'onewire')
+	if not import_path in sys.path:
+		print(f"[{__file__}] Appending '{import_path}' to sys.path")
+		sys.path.append(import_path)
 
-    from onewire.bus import OneWireBus
-    from ds18x20 import DS18X20
+	from onewire.bus import OneWireBus
+	from ds18x20 import DS18X20
 
 
 ## Initialize 1-Wire bus
