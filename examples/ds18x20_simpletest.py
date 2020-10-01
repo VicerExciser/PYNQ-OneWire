@@ -25,6 +25,7 @@ except (ImportError, ModuleNotFoundError):
 	from onewire.bus import OneWireBus
 	from ds18x20 import DS18X20
 
+LOOP_DELAY = 5  ## Seconds
 
 ## Initialize 1-Wire bus
 ow_bus = OneWireBus.get_instance()
@@ -41,6 +42,6 @@ while True:
 			print(f"[{index}]  DS18X20_{hex(sensor.rom_id)}:\tTemperature = {sensor.temperature} °C")
 			time.sleep(0.1)
 		print('\n')
-		time.sleep(1.0)
+		time.sleep(LOOP_DELAY)
 	except KeyboardInterrupt:
 		break
