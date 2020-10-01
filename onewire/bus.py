@@ -1,11 +1,8 @@
 import os
 import time
 from pynq import MMIO, Clocks
-# from pynq.pl import PL
 from pynq.overlays.base import BaseOverlay
-# import ds18b20
 from . import constants as const
-
 
 ###################################################################################################
 
@@ -26,7 +23,7 @@ class OneWireAddress:
 	"""A class to represent a 1-Wire address."""
 
 	def __init__(self, rom):
-		self._rom = rom
+		self._rom = rom		## Example:  0x5f0000060719f528
 
 	@property
 	def rom(self):
@@ -44,17 +41,21 @@ class OneWireAddress:
 	@property
 	def crc(self):
 		"""The 8 bit CRC."""
-		return self._rom[7]
+		# return self._rom[7]
+		# return int((hex(self._rom)[2:])[12:14], 16)
+		return self._rom >> 56
 
 	@property
 	def serial_number(self):
 		"""The 48 bit serial number."""
-		return self._rom[1:7]
+		# return self._rom[1:7]
+		return ((self._rom >> 8) & 0x00FFFFFFFFFFFF)
 
 	@property
 	def family_code(self):
 		"""The 8 bit family code."""
-		return self._rom[0]
+		# return self._rom[0]
+		return self._rom & 0xFF
 
 	def __str__(self):
 		return f"OneWireAddress_{hex(self.rom)}"
@@ -72,35 +73,17 @@ class OneWireBus:
 	# ##                               #  ^ Skipping the re-download will break 1-Wire search
 	
 	ROMAD_SIZE = 20 	## Large enough to hold 10 temp. sensor ROM IDs
-	# BRAM = None  #MMIO(AXI_OW_ADDR, AXI_OW_RANGE)
 	
 	__instance = None 
-
-
 	__bus_initialized = False 
 	search_complete = False 
-	# devices = [0] * ROMAD_SIZE
-	# num_roms = 0
 
 	
-
-
 	@staticmethod
-	# def get_instance(**kwargs):
-	# 	if OneWire.__instance is None:
-	# 		OneWire(base_addr=kwargs['base_addr'], addr_range=kwargs['addr_range'])
-	# def get_instance(base_addr=const.AXI_OW_ADDR, addr_range=const.AXI_OW_RANGE):
-	# 	if AXI_OW_ADDR != base_addr or AXI_OW_RANGE != addr_range:
-	# 		OneWire.__instance = None
 	def get_instance(overlay_path=const.OVERLAY_PATH):
-
-		# OneWireBus.OVERLAY = BaseOverlay(overlay_path)   #, download=(not OVERLAY_NAME == PL.bitfile_name.split('/')[-1]))
-		##                               #  ^ Skipping the re-download will break 1-Wire search
 		base_address = const.AXI_OW_ADDR(OneWireBus.OVERLAY)
 		address_range = const.AXI_OW_RANGE(OneWireBus.OVERLAY)
-
 		if OneWireBus.__instance is None:
-			# OneWire(base_addr=kwargs['base_addr'], addr_range=kwargs['addr_range'])
 			OneWireBus(base_addr=base_address, addr_range=address_range)			
 		return OneWireBus.__instance
 
@@ -111,10 +94,7 @@ class OneWireBus:
 			self.axi_addr = base_addr
 			self.axi_range = addr_range 
 			self.bram = MMIO(base_addr, addr_range)
-
-			# self.search_complete = True 
-			# self.rom_addrs = list()
-			self.device_addresses = [None]   #list()
+			self.device_addresses = [None]
 
 			OneWireBus.num_roms = 0
 			OneWireBus.set_clk()		## Set the PL function clock tied to the ow_master IP to 33 MHz
@@ -129,11 +109,11 @@ class OneWireBus:
 	def initialized(self):
 		return self.__bus_initialized
 
+
 	@staticmethod
 	def initialized():
 		return OneWire.__bus_initialized
 
-	
 ## ---------------------------------------------------------------------------------------------
 
 	@staticmethod
@@ -155,9 +135,9 @@ class OneWireBus:
 			Clocks.set_pl_clk(idx, clk_mhz=mhz)
 
 
-
 	def write(self, reg_addr, cmd):
 		self.bram.write(reg_addr, cmd)
+
 
 	def read(self, reg_addr):
 		return self.bram.read(reg_addr)
@@ -166,14 +146,18 @@ class OneWireBus:
 	def read_status(self):
 		return self.read(const.bram_registers['STATUS'])
 
+
 	def read_num_found_roms(self):
 		return self.read(const.bram_registers['FOUND'])
+
 
 	def write_command(self, cmd):
 		self.write(const.bram_registers['COMMAND'], cmd)
 
+
 	def write_control(self, cmd):
 		self.write(const.bram_registers['CONTROL'], cmd)
+
 
 	def serialize_command(self):
 		self.write_control(const.bus_commands['SERIALIZE'])
@@ -202,25 +186,10 @@ class OneWireBus:
 				return False
 			timeout()
 		return True
-
-
-	# def get_rom_id(self, sensor_index):
-	# 	if 0 <= sensor_index < (len(self.device_addresses) // 2):  #self.ROMAD_SIZE:
-	# 		true_idx = sensor_index * 2
-	# 		rom_lo = self.device_addresses[true_idx]
-	# 		rom_hi = self.device_addresses[true_idx + 1]
-	# 		rom_id = (rom_hi << 32) + rom_lo
-	# 		return hex(rom_id).split('x')[-1].upper()
-	# 		# return self.device_addresses[sensor_index]
-	# 	return None
-
-	# def get_
-	
-	
+		
 ## ---------------------------------------------------------------------------------------------
 
 	## Polls the bus for devices & returns number of slaves
-
 	# def search(self, SensorClass, search_cmd):
 	def search(self, search_cmd=const.bus_commands['SEARCH_ROM']):
 		"""
@@ -233,9 +202,6 @@ class OneWireBus:
 		This function has been configured so that an ALARM SEARCH [ECh] command and an alarms_array may
 		be passed in to only collect ROMs of slaves with a set alarm flag.
 		"""
-
-		# if not OneWire.initialized():
-		# 	OneWire()
 
 		while OneWireBus.search_complete == False:
 			print('.', end='')
@@ -259,10 +225,10 @@ class OneWireBus:
 
 		if r_status & const.bitmasks['STA_SER']:
 			print('SEARCH PROTOCOL ERROR : SEARCH INCOMPLETE DUE TO ONE WIRE PROTOCOL ERROR\n')
-			return False
+			return None
 		elif r_status & const.bitmasks['STA_SME']:
-				print('SEARCH MEMORY ERROR : NOT ENOUGH FPGA MEMORY ALLOCATED FOR # of OW DEVICES FOUND\n')
-				return False
+			print('SEARCH MEMORY ERROR : NOT ENOUGH FPGA MEMORY ALLOCATED FOR # of OW DEVICES FOUND\n')
+			return None
 
 		self.num_roms = self.read_num_found_roms()
 		print(f'# ROMS FOUND = {self.num_roms}')
@@ -275,13 +241,11 @@ class OneWireBus:
 		if self.num_roms > len(self.device_addresses):
 			self.device_addresses.extend([None] * (self.num_roms - len(self.device_addresses)))
 
-
 		for i in range(self.num_roms):
 			rom_lo = self.read((const.bram_registers['ROM_ID0'] + (i << 3)))
 			rom_hi = self.read((const.bram_registers['ROM_ID1'] + (i << 3)))
 			rom_long = (rom_hi << 32) + rom_lo
 			print(f"\nROM {i} ID: {hex(rom_long)}")
-
 
 			# self.device_addresses[i * 2] = rom_lo
 			# self.device_addresses[(i * 2) + 1] = rom_hi
@@ -305,10 +269,8 @@ class OneWireBus:
 					j += 1
 				self.device_addresses[j%len(self.device_addresses)] = new_device 
 
-
 		OneWireBus.search_complete = True 		## Unlock the 1-Wire bus after search is completed
 		return list(self.device_addresses)
-
 
 
 	def match_rom(self, address):
@@ -334,12 +296,7 @@ class OneWireBus:
 			timeout()
 		return True 
 
-	
-
 ## ---------------------------------------------------------------------------------------------
 
 # if __name__ == "__main__":
 # 	ow_bus = OneWire.get_instance()
-
-
-
