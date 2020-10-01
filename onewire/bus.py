@@ -272,12 +272,7 @@ class OneWireBus:
 		OneWireBus.search_complete = True 		## Unlock the 1-Wire bus after search is completed
 
 		# return list(self.device_addresses)
-		return_list = []
-		for addr in self.device_addresses:
-			if addr is not None:
-				return_list.append(addr)
-		return return_list
-		
+		return [addr for addr in self.device_addresses if addr is not None]		
 
 
 	def match_rom(self, address):
